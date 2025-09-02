@@ -1,0 +1,73 @@
+import sqlite3
+
+connection = sqlite3.connect("C:/database/books.db")
+cursor = connection.cursor()
+
+while True:
+    choice = input("Press A To add book, Press U to update book, Press D to Delete book, Press I to add Information, Press B set/remove if its borrowed, Press C to check if its borrowed and Press L to show list of books")
+    if choice == "A":
+        name = input("Enter new book name\n")
+
+        data = [name]
+
+        cursor.execute("INSERT INTO books (name) VALUES (?)", data)
+        connection.commit()
+        print(f"New book name: {name}")
+    elif choice == "U":
+        id = input("Enter movie id\n")
+        name = input("Enter new book name\n")
+
+        data = [name, id]
+
+        cursor.execute("UPDATE books SET name = ? WHERE id = ?", data)
+        connection.commit()
+        print(f"{id} has been updated")
+
+    elif choice == "D":
+        id = input("Enter movie id\n")
+
+        data = [id]
+
+        cursor.execute("DELETE FROM books WHERE id = ?", data)
+        connection.commit()
+        print(f"{id} has been deleted")
+
+    elif choice == "L":
+        result = cursor.execute("SELECT * FROM books")
+
+        books = result.fetchall()
+
+        for book in books:
+            print(book)
+    elif choice == "I":
+        Information = input("Enter Genre, Author and Publication Year\n")
+        id = input("Enter book id\n")
+
+        data = [Information, id]
+
+        cursor.execute("UPDATE books SET Information = ? WHERE id = ?", data)
+        connection.commit()
+        print(f"{Information} has been added to {id}")
+
+
+    elif choice == "B":
+        id = input("Which book is being borrowed/returned?\n")
+        borrowed = input("Is book in library?\n")
+
+
+        data = [borrowed, id]
+
+        cursor.execute("UPDATE books SET borrowed = ? WHERE id = ?", data)
+        connection.commit()
+    elif choice == "C":
+        id = input("Enter movie id\n")
+
+        data = [id]
+
+        result = cursor.execute("SELECT borrowed FROM books WHERE id = ?", data)
+        books = cursor.fetchall()
+
+        print(books)
+    else:
+        break
+
